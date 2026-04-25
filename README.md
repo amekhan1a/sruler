@@ -8,7 +8,7 @@ it captures a single screenshot through the XDG desktop screenshot portal, opens
 
 ## behavior
 
-- mouse move: move the anchor and recompute the measurement
+- mouse move: move the crosshair and recompute the measurement
 - mouse wheel: adjust the color difference threshold T used to detect region edges, lower T = stops at subtler color changes
 - lmb: copy WxH and exit
 - esc: exit
