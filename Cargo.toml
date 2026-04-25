@@ -1,0 +1,17 @@
+[package]
+name = "sruler"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.81"
+license = "GPL-3.0-or-later"
+description = "a wayland screen ruler"
+
+[dependencies]
+anyhow = "1"
+ashpd = { version = "0.13", features = ["screenshot"] }
+arboard = { version = "3", features = ["wayland-data-control"] }
+eframe = { version = "0.34", default-features = false, features = ["glow", "wayland"] }
+egui = "0.34"
+image = "0.25"
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+url = "2"
