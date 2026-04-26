@@ -31,11 +31,8 @@ fn pixel_at(frame: &FrozenFrame, x: u32, y: u32) -> [u8; 4] {
 }
 
 fn scan_left(frame: &FrozenFrame, x: u32, y: u32, threshold: u8) -> u32 {
-    if x == 0 {
-        return 0;
-    }
-
     let mut last = pixel_at(frame, x, y);
+
     for ix in (0..x).rev() {
         let current = pixel_at(frame, ix, y);
         if diff(current, last) > threshold as u16 {
@@ -44,15 +41,12 @@ fn scan_left(frame: &FrozenFrame, x: u32, y: u32, threshold: u8) -> u32 {
         last = current;
     }
 
-    x
+    x + 1
 }
 
 fn scan_right(frame: &FrozenFrame, x: u32, y: u32, threshold: u8) -> u32 {
-    if x + 1 >= frame.width {
-        return 0;
-    }
-
     let mut last = pixel_at(frame, x, y);
+
     for ix in (x + 1)..frame.width {
         let current = pixel_at(frame, ix, y);
         if diff(current, last) > threshold as u16 {
@@ -61,15 +55,12 @@ fn scan_right(frame: &FrozenFrame, x: u32, y: u32, threshold: u8) -> u32 {
         last = current;
     }
 
-    frame.width - 1 - x
+    frame.width - x
 }
 
 fn scan_up(frame: &FrozenFrame, x: u32, y: u32, threshold: u8) -> u32 {
-    if y == 0 {
-        return 0;
-    }
-
     let mut last = pixel_at(frame, x, y);
+
     for iy in (0..y).rev() {
         let current = pixel_at(frame, x, iy);
         if diff(current, last) > threshold as u16 {
@@ -78,15 +69,12 @@ fn scan_up(frame: &FrozenFrame, x: u32, y: u32, threshold: u8) -> u32 {
         last = current;
     }
 
-    y
+    y + 1
 }
 
 fn scan_down(frame: &FrozenFrame, x: u32, y: u32, threshold: u8) -> u32 {
-    if y + 1 >= frame.height {
-        return 0;
-    }
-
     let mut last = pixel_at(frame, x, y);
+
     for iy in (y + 1)..frame.height {
         let current = pixel_at(frame, x, iy);
         if diff(current, last) > threshold as u16 {
@@ -95,7 +83,7 @@ fn scan_down(frame: &FrozenFrame, x: u32, y: u32, threshold: u8) -> u32 {
         last = current;
     }
 
-    frame.height - 1 - y
+    frame.height - y
 }
 
 pub fn measure(frame: &FrozenFrame, cursor_x: u32, cursor_y: u32, threshold: u8) -> Measurement {
@@ -115,11 +103,11 @@ pub fn measure(frame: &FrozenFrame, cursor_x: u32, cursor_y: u32, threshold: u8)
         right,
         up,
         down,
-        width: left + right,
-        height: up + down,
-        left_edge_x: x.saturating_sub(left),
-        right_edge_x: (x + right).min(frame.width.saturating_sub(1)),
-        top_edge_y: y.saturating_sub(up),
-        bottom_edge_y: (y + down).min(frame.height.saturating_sub(1)),
+        width: left + right - 1,
+        height: up + down - 1,
+        left_edge_x: x.saturating_sub(left - 1),
+        right_edge_x: (x + right - 1).min(frame.width.saturating_sub(1)),
+        top_edge_y: y.saturating_sub(up - 1),
+        bottom_edge_y: (y + down - 1).min(frame.height.saturating_sub(1)),
     }
 }
