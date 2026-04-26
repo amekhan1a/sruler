@@ -31,58 +31,42 @@ fn pixel_at(frame: &FrozenFrame, x: u32, y: u32) -> [u8; 4] {
 }
 
 fn scan_left(frame: &FrozenFrame, x: u32, y: u32, threshold: u8) -> u32 {
-    let mut last = pixel_at(frame, x, y);
-
+    let origin = pixel_at(frame, x, y);
     for ix in (0..x).rev() {
-        let current = pixel_at(frame, ix, y);
-        if diff(current, last) > threshold as u16 {
+        if diff(pixel_at(frame, ix, y), origin) > threshold as u16 {
             return x - ix;
         }
-        last = current;
     }
-
     x + 1
 }
 
 fn scan_right(frame: &FrozenFrame, x: u32, y: u32, threshold: u8) -> u32 {
-    let mut last = pixel_at(frame, x, y);
-
+    let origin = pixel_at(frame, x, y);
     for ix in (x + 1)..frame.width {
-        let current = pixel_at(frame, ix, y);
-        if diff(current, last) > threshold as u16 {
+        if diff(pixel_at(frame, ix, y), origin) > threshold as u16 {
             return ix - x;
         }
-        last = current;
     }
-
     frame.width - x
 }
 
 fn scan_up(frame: &FrozenFrame, x: u32, y: u32, threshold: u8) -> u32 {
-    let mut last = pixel_at(frame, x, y);
-
+    let origin = pixel_at(frame, x, y);
     for iy in (0..y).rev() {
-        let current = pixel_at(frame, x, iy);
-        if diff(current, last) > threshold as u16 {
+        if diff(pixel_at(frame, x, iy), origin) > threshold as u16 {
             return y - iy;
         }
-        last = current;
     }
-
     y + 1
 }
 
 fn scan_down(frame: &FrozenFrame, x: u32, y: u32, threshold: u8) -> u32 {
-    let mut last = pixel_at(frame, x, y);
-
+    let origin = pixel_at(frame, x, y);
     for iy in (y + 1)..frame.height {
-        let current = pixel_at(frame, x, iy);
-        if diff(current, last) > threshold as u16 {
+        if diff(pixel_at(frame, x, iy), origin) > threshold as u16 {
             return iy - y;
         }
-        last = current;
     }
-
     frame.height - y
 }
 

@@ -104,7 +104,7 @@ impl SrulerApp {
     }
 
     fn copy_and_quit(&mut self, ctx: &egui::Context) {
-        let text = format!("{} × {}", self.measurement.width, self.measurement.height);
+        let text = format!("{} x {}", self.measurement.width, self.measurement.height);
         if let Some(clipboard) = self.clipboard.as_mut() {
             if let Err(err) = clipboard.set_text(text.clone()) {
                 eprintln!("sruler: clipboard write failed: {err}");
@@ -238,14 +238,64 @@ impl SrulerApp {
         }
 
         let cap_color = self.config.scanline_color;
-        Self::draw_cap(painter, left, true, cap_color, ppp);
-        Self::draw_cap(painter, right, true, cap_color, ppp);
-        Self::draw_cap(painter, up, false, cap_color, ppp);
-        Self::draw_cap(painter, down, false, cap_color, ppp);
+        Self::draw_cap(
+            painter,
+            pixel_center_to_logical(
+                Pos2::new(measurement.left_edge_x.saturating_sub(1) as f32, self.cursor_px.y),
+                ppp,
+            ),
+            true,
+            cap_color,
+            ppp,
+        );
+
+        Self::draw_cap(
+            painter,
+            pixel_center_to_logical(
+                Pos2::new(
+                    (measurement.right_edge_x + 1).min(self.frame.width.saturating_sub(1)) as f32,
+                    self.cursor_px.y,
+                ),
+                ppp,
+            ),
+            true,
+            cap_color,
+            ppp,
+        );
+
+        Self::draw_cap(
+            painter,
+            pixel_center_to_logical(
+                Pos2::new(self.cursor_px.x, measurement.top_edge_y.saturating_sub(1) as f32),
+                ppp,
+            ),
+            false,
+            cap_color,
+            ppp,
+        );
+
+        Self::draw_cap(
+            painter,
+            pixel_center_to_logical(
+                Pos2::new(
+                    self.cursor_px.x,
+                    (measurement.bottom_edge_y + 1).min(self.frame.height.saturating_sub(1)) as f32,
+                ),
+                ppp,
+            ),
+            false,
+            cap_color,
+            ppp,
+        );
+
+        let logical_w = (measurement.width as f32 / ppp).round() as u32;
+        let logical_h = (measurement.height as f32 / ppp).round() as u32;
 
         let tooltip = format!(
-            "{} × {}\nT {}",
-            measurement.width, measurement.height, measurement.threshold
+            "{} x {} px\n{} x {} logical\nT {}",
+            measurement.width, measurement.height,
+            logical_w, logical_h,
+            measurement.threshold,
         );
         let text_size = self.font.measure(&tooltip);
         let padding = Vec2::new(8.0, 6.0);
@@ -312,5 +362,5 @@ fn load_texture(ctx: &egui::Context, frame: &FrozenFrame) -> TextureHandle {
         [frame.width as usize, frame.height as usize],
         &frame.rgba,
     );
-    ctx.load_texture("sruler-frozen-frame", image, TextureOptions::LINEAR)
+    ctx.load_texture("sruler-frozen-frame", image, TextureOptions::NEAREST)
 }

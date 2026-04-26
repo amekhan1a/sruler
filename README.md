@@ -36,6 +36,7 @@ cargo build --release
 - screen capture requires a desktop portal implementation that supports the screenshot portal
 - because it uses desktop portals, it may save a screenshot every use of the program, sorry
 - no multi monitor support, it literally doesn't work if more than one monitor is on
+- fractional scaling makes it janky
 
 ## license
 GPLv3 or later, see LICENSE
