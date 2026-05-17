@@ -25,7 +25,7 @@ fn pixel_len_to_logical(len_px: f32, ppp: f32) -> f32 {
     len_px / ppp
 }
 
-pub fn run(frame: FrozenFrame) -> Result<()> {
+pub fn run(frame: FrozenFrame, output_name: String) -> Result<()> {
     let options = NativeOptions {
         viewport: egui::ViewportBuilder::default()
             .with_title("sruler")
@@ -47,7 +47,7 @@ pub fn run(frame: FrozenFrame) -> Result<()> {
     eframe::run_native(
         "SRuler",
         options,
-        Box::new(move |cc| Ok(Box::new(SrulerApp::new(cc, frame)))),
+        Box::new(move |cc| Ok(Box::new(SrulerApp::new(cc, frame, output_name)))),
     )
     .map_err(|e| anyhow::anyhow!(e.to_string()))
 }
@@ -63,10 +63,11 @@ pub struct SrulerApp {
     should_close: bool,
     config: Config,
     font: TinyBitmapFont,
+    output_name: String,
 }
 
 impl SrulerApp {
-    pub fn new(cc: &CreationContext<'_>, frame: FrozenFrame) -> Self {
+    pub fn new(cc: &CreationContext<'_>, frame: FrozenFrame, output_name: String) -> Self {
         let config = Config::default();
         let font = TinyBitmapFont::new(config.tooltip_scale);
         let texture = Some(load_texture(&cc.egui_ctx, &frame));
@@ -85,6 +86,7 @@ impl SrulerApp {
             should_close: false,
             config,
             font,
+            output_name,
         }
     }
 
@@ -292,7 +294,8 @@ impl SrulerApp {
         let logical_h = (measurement.height as f32 / ppp).round() as u32;
 
         let tooltip = format!(
-            "{} x {} px\n{} x {} logical\nT {}",
+            "{}\n{} x {} px\n{} x {} logical\nT {}",
+            self.output_name,
             measurement.width, measurement.height,
             logical_w, logical_h,
             measurement.threshold,
