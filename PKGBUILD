@@ -2,7 +2,7 @@
 
 pkgname=sruler-git
 _pkgname=sruler
-pkgver=r0.0000000
+pkgver=r8.fb11cb7
 pkgrel=1
 pkgdesc="Simple Wayland ruler"
 arch=('x86_64')
@@ -20,7 +20,7 @@ pkgver() {
 
 build() {
     cd "$srcdir/$_pkgname"
-    cargo build --release --locked
+    cargo build --release
 }
 
 package() {
