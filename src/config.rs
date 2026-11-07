@@ -10,8 +10,13 @@ pub struct Config {
     pub tooltip_bg: Color32,
     pub tooltip_text: Color32,
     pub tooltip_border: Color32,
-    pub tooltip_scale: f32,
+    /// Font size in logical points for the tooltip and the help box.
+    pub tooltip_font_size: f32,
     pub tooltip_radius: f32,
+    pub show_help_on_start: bool,
+    /// Line and marker color for point-to-point measurement.
+    pub p2p_color: Color32,
+    pub p2p_width: f32,
 }
 
 impl Default for Config {
@@ -25,8 +30,11 @@ impl Default for Config {
             tooltip_bg: Color32::from_rgba_unmultiplied(10, 10, 10, 200),
             tooltip_text: Color32::WHITE,
             tooltip_border: Color32::from_rgba_unmultiplied(255, 255, 255, 50),
-            tooltip_scale: 2.0,
+            tooltip_font_size: 14.0,
             tooltip_radius: 0.0,
+            show_help_on_start: false,
+            p2p_color: Color32::from_rgba_unmultiplied(255, 0, 200, 230),
+            p2p_width: 1.0,
         }
     }
 }
