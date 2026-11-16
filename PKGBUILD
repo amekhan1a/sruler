@@ -2,7 +2,7 @@
 
 pkgname=sruler-git
 _pkgname=sruler
-pkgver=r8.fb11cb7
+pkgver=r10.4cdd077
 pkgrel=1
 pkgdesc="Simple Wayland ruler"
 arch=('x86_64')
