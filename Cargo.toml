@@ -6,6 +6,10 @@ rust-version = "1.81"
 license = "GPL-3.0-or-later"
 description = "a wayland screen ruler"
 
+[build-dependencies]
+tar = "0.4"
+flate2 = "1"
+
 [dependencies]
 anyhow = "1"
 arboard = { version = "3", features = ["wayland-data-control"] }
